@@ -11,9 +11,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [isSignedIn, setIsSignedIn] = useState(false); // Lift the state to the App component
+
+  useEffect(() => {
+    // Check if the user is already signed in (e.g., on app start)
+    // You can implement this logic using Firebase authentication
+
+    // For demonstration purposes, I'm assuming the user is not signed in initially.
+    setIsSignedIn(false);
+  }, []);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName={isSignedIn ? "Chat" : "Home"}>
         <Stack.Screen
           name="Home"
           component={SignInScreen}
@@ -25,7 +35,10 @@ export default function App() {
           options={({ navigation }) => ({
             title: 'Chat',
             headerRight: () => (
-              <SignOutButton navigation={navigation} />
+              <SignOutButton
+                navigation={navigation}
+                setIsSignedIn={setIsSignedIn} // Pass setIsSignedIn as a prop
+              />
             ),
             headerLeft: null, // Hide the back arrow
           })}
@@ -37,20 +50,13 @@ export default function App() {
 
 function SignInScreen() {
   const navigation = useNavigation();
-  const [isSignedIn, setIsSignedIn] = useState(false);
-
-  useEffect(() => {
-    if (isSignedIn) {
-      navigation.navigate('Chat');
-    }
-  }, [isSignedIn, navigation]);
 
   function signUp() {
     signInWithPopup(authentication, provider)
       .then((result) => {
         const user = result.user;
         alert(`Welcome, ${user.displayName}!`);
-        setIsSignedIn(true);
+        navigation.navigate('Chat');
       })
       .catch((error) => {
         console.log(error.message);
@@ -62,11 +68,7 @@ function SignInScreen() {
       <Text style={styles.logoText}>Mood Chat</Text>
       <Text style={styles.boldText}>Sign in to chat</Text>
       <StatusBar style="auto" />
-      {!isSignedIn ? (
-        <>
-          <GoogleButton onClick={signUp} />
-        </>
-      ) : null}
+      <GoogleButton onClick={signUp} />
     </View>
   );
 }
@@ -79,15 +81,15 @@ function ChatScreen() {
   );
 }
 
-function SignOutButton({ navigation }) {
+function SignOutButton({ navigation, setIsSignedIn }) {
   function handleSignOut() {
     // Perform sign out logic here
     // ...
     signOut(authentication)
       .then(() => {
         alert('User signed out successfully.');
+        setIsSignedIn(false); // Update the state to indicate signed out
         navigation.navigate('Home');
-        setIsSignedIn(false);
       })
       .catch((error) => {
         console.log(error.message);
@@ -130,6 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
 
 
 
