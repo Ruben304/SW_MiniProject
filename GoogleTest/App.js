@@ -64,11 +64,14 @@ function SignInScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.logoText}>Mood Chat</Text>
-      <Text style={styles.boldText}>Sign in to chat</Text>
-      <StatusBar style="auto" />
-      <GoogleButton onClick={signUp} />
+    <View style={styles.homeContainer}>
+      <View style={styles.whiteSquare}></View>
+      <View style={styles.contentContainer}>
+        <Text style={styles.logoText}>Mood Chat</Text>
+        <Text style={styles.boldText}>Sign in to chat</Text>
+        <StatusBar style="auto" />
+        <GoogleButton onClick={signUp} />
+      </View>
     </View>
   );
 }
@@ -104,9 +107,32 @@ function SignOutButton({ navigation, setIsSignedIn }) {
 }
 
 const styles = StyleSheet.create({
+  homeContainer: {
+    flex: 1,
+    backgroundColor: 'lavendar',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  whiteSquare: {
+    width: 400, // Updated width to 400
+    height: 225, // Updated height to 225
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: '50%', // Center vertically
+    left: '50%', // Center horizontally
+    marginLeft: -200, // Half of the width (negative margin)
+    marginTop: -112.5, // Half of the height (negative margin)
+    borderRadius: 10
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'lavender',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -114,20 +140,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', // Make the text bold
     fontSize: 48, // Increase the font size
     marginBottom: 20, // Add some space below the text
-    color: '#4285F4',
+    color: 'black',
   },
   boldText: {
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 22,
     marginBottom: 10,
-    color: '#4285F4',
+    color: 'black',
   },
   signOutButton: {
     padding: 10,
     marginRight: 10,
   },
   signOutButtonText: {
-    color: '#4285F4',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 16,
   },
