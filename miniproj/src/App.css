@@ -1,38 +1,84 @@
-.App {
-  text-align: center;
+.container{
+  flex: 1;
+  background-color: '#blue';
+  align-items: 'center';
+  justify-content: 'center';
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.homeContainer{
+  flex: 1;
+  background-color: '#blue';
+  align-items: 'center';
+  justify-content: 'center';
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.logoText{
+  font-weight: 'bold';
+  font-size: 48;
+  margin-bottom: 20;
+  color: '#4285F4';
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.boldText{
+  font-weight: 'bold';
+  font-size: 24;
+  margin-bottom: 10;
+  color: '#4285F4';
 }
-
-.App-link {
-  color: #61dafb;
+.signOutButton{
+  padding: 10;
+  margin-right: 10;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.signOutButtonText{
+  color: '#4285F4';
+  font-weight: 'bold';
+  font-size: 16;
+}
+.whiteSquare{
+  width: 400; 
+  height: 225; 
+  background-color: 'white';
+  position: 'absolute';
+  top: '50%';
+  left: '50%'; 
+  margin-left: -200;
+  margin-top: -112.5; 
+  border-radius: 10;
+}
+.contentContainer{
+  flex: 1;
+  background-color: 'transparent';
+  align-items: 'center';
+  justify-content: 'center';
+}
+.inputContainer{
+  flex-direction: 'row';
+  align-items: 'center';
+  justify-content: 'space-between';
+  padding-left: 16;
+  padding-right: 16;
+  padding-top: 8;
+  padding-bottom: 8;
+}
+.leftPane{
+  flex: 1;
+  background-color: '#f0f0f0'; 
+  padding: 16;
+}
+.searchInput{
+  background-color: '#fff';
+  padding: 8;
+  margin-bottom: 16;
+  border-radius: 5;
+}
+.rightPane{
+  flex: 2;
+}
+.searchResults{
+  flex: 1;
+}
+.inputContainer{
+  flex-direction: 'row';
+  align-items: 'center';
+  background-color: '#fff';
+  padding: 8;
+  border-radius: 5;
+  margin-bottom: 16;
 }

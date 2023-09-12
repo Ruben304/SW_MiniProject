@@ -1,17 +1,13 @@
 
 import React from 'react';
-import { GoogleLogin } from '@react-oauth/google';
+import './App.css';
+import { signInWithGoogle } from './firebase.js';
 
 function App() {
-    const responseMessage = (response) => {
-        console.log(response);
-    };
-    const errorMessage = (error) => {
-        console.log(error);
-    };
-    return (
-        <div>
-            <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+
+    return(
+        <div className="App">
+            <button onClick={signInWithGoogle}>Sign In With Google</button>
         </div>
     )
 }
