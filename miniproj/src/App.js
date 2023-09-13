@@ -1,10 +1,10 @@
 import './App.css'
-import React from 'react';
-import {auth, provider} from './firebase.js'
+import React, {useState, useRef} from 'react';
+import {auth, provider, firestore} from './firebase.js'
 import GoogleButton from 'react-google-button';
 import {signInWithPopup, GoogleAuthProvider, signOut} from 'firebase/auth'
 import {useAuthState} from 'react-firebase-hooks/auth';
-
+import {useCollectionData} from 'react-firebase-hooks/firestore';
 
 function App(){
     const [user] = useAuthState(auth);
@@ -45,6 +45,7 @@ function Login() {
     )
 }
 
+
 function Room() {
 
     const signOutWithGoogle = () => {
@@ -55,11 +56,32 @@ function Room() {
         });
     };
 
-    
+    const messagesRef = firestore.collection('messages');
+    const query = messagesRef.orderBy('createdAt').limit(25);
+    const [messages] = useCollectionData(query,{idField: 'id'});
 
     return(
-        <button onClick={signOutWithGoogle}>Sign Out</button>
+        <>
+            <div className='Logout Container'>
+                <button className='Logout' onClick={signOutWithGoogle}>Sign Out</button>
+            </div>
+            <div>
+                {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
+            </div>
+        </>
     ) 
+}
+
+function ChatMessage(props){
+    const {text, uid,photoURL} = props.message;
+
+    const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
+    return (
+        <div className={'message ${messageClass}'}>
+            <img src={photoURL}/>
+            <p>{text}</p>
+        </div>
+    )
 }
 
 export default App;
