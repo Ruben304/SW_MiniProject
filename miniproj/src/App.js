@@ -65,13 +65,12 @@ function Room() {
 
     const sendMessage = async(e) =>{
         e.preventDefault();
-        const {uid, photoURL} = auth.currentUser;
+        const {uid} = auth.currentUser;
 
         await messagesRef.add({
             text: formValue,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            uid,
-            photoURL
+            uid
         })
         setFormValue(' ');
     }
@@ -92,16 +91,17 @@ function Room() {
     ) 
 }
 
-function ChatMessage(props){
-    const {text, uid,photoURL} = props.message;
-
+function ChatMessage(props) {
+    const { text, uid} = props.message;
+  
     const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
-    return (
-        <div className={'message ${messageClass}'}>
-            <img src={photoURL}/>
-            <p>{text}</p>
-        </div>
-    )
+    
+    return (<>
+      <div className={`message ${messageClass}`}>
+        <p>{text}</p>
+      </div>
+    </>)
 }
+
 
 export default App;

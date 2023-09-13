@@ -27,3 +27,21 @@
       }
     }
   }
+
+.message{
+    display:flex;
+    align-items:center;
+}
+
+.sent{
+    flex-direction: row-reverse;
+}
+
+.sent p{
+    background-color: blue;
+    align-self:flex-end;
+}
+
+.received p{
+    background-color: green;
+}
