@@ -1,84 +1,28 @@
-.container{
-  flex: 1;
-  background-color: '#blue';
-  align-items: 'center';
-  justify-content: 'center';
-}
-.homeContainer{
-  flex: 1;
-  background-color: '#blue';
-  align-items: 'center';
-  justify-content: 'center';
-}
-.logoText{
-  font-weight: 'bold';
-  font-size: 48;
-  margin-bottom: 20;
-  color: '#4285F4';
-}
-.boldText{
-  font-weight: 'bold';
-  font-size: 24;
-  margin-bottom: 10;
-  color: '#4285F4';
-}
-.signOutButton{
-  padding: 10;
-  margin-right: 10;
-}
-.signOutButtonText{
-  color: '#4285F4';
-  font-weight: 'bold';
-  font-size: 16;
-}
-.whiteSquare{
-  width: 400; 
-  height: 225; 
-  background-color: 'white';
-  position: 'absolute';
-  top: '50%';
-  left: '50%'; 
-  margin-left: -200;
-  margin-top: -112.5; 
-  border-radius: 10;
-}
-.contentContainer{
-  flex: 1;
-  background-color: 'transparent';
-  align-items: 'center';
-  justify-content: 'center';
-}
-.inputContainer{
-  flex-direction: 'row';
-  align-items: 'center';
-  justify-content: 'space-between';
-  padding-left: 16;
-  padding-right: 16;
-  padding-top: 8;
-  padding-bottom: 8;
-}
-.leftPane{
-  flex: 1;
-  background-color: '#f0f0f0'; 
-  padding: 16;
-}
-.searchInput{
-  background-color: '#fff';
-  padding: 8;
-  margin-bottom: 16;
-  border-radius: 5;
-}
-.rightPane{
-  flex: 2;
-}
-.searchResults{
-  flex: 1;
-}
-.inputContainer{
-  flex-direction: 'row';
-  align-items: 'center';
-  background-color: '#fff';
-  padding: 8;
-  border-radius: 5;
-  margin-bottom: 16;
+.LoginContainer{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f2f7f2;;
+  
+  .Login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    background-color: white;
+    gap: 15px;
+    height: 400px;
+    width: 300px;
+    border-radius: 20px;
+
+    .Title{
+      font-size: 40px;
+      padding-bottom: 40px;
+    }
+    .Intro{
+      font-size: 20px;
+      padding: 1px;
+    }
+  }
 }
