@@ -1,1 +1,29 @@
 
+.LoginContainer{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2f7f2;;
+    
+    .Login{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items:center;
+      background-color: white;
+      gap: 15px;
+      height: 400px;
+      width: 300px;
+      border-radius: 20px;
+  
+      .Title{
+        font-size: 40px;
+        padding-bottom: 40px;
+      }
+      .Intro{
+        font-size: 20px;
+        padding: 1px;
+      }
+    }
+  }

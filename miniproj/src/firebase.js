@@ -1,5 +1,6 @@
 import {initializeApp} from 'firebase/app';
-import {getAuth, GoogleAuthProvider, signInWithPopup, signOut} from 'firebase/auth';
+import {getAuth, GoogleAuthProvider} from 'firebase/auth';
+import {getMessaging} from 'firebase/messaging/sw';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDL1slKD5FUg_bKGB6VRYgt4-qIMH-GGZM",
@@ -12,31 +13,8 @@ const firebaseConfig = {
   };
   
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
-
-const provider = new GoogleAuthProvider()
-
-
-export const signInWithGoogle = () => {
-    signInWithPopup(auth,provider).then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        //signed in user info
-        const user = result.user;
-        localStorage.setItem("authenticated",true);
-    }).catch((error) =>{
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-    })
-};
-
-
-export const signOutWithGoogle = () => {
-    signOut(auth).then( () => {
-        console.log("sign out success");
-        localStorage.setItem("authenticated",false);
-    }).catch((error) => {
-        console.log("sign out failed");
-    });
-};
+export const provider = new GoogleAuthProvider();
+export const messaging = getMessaging(firebaseConfig);
+export default app;
