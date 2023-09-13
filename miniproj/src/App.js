@@ -1,19 +1,24 @@
-
-import React, {useState} from 'react';
-import './App.css';
-import { signInWithGoogle } from './firebase.js';
-import GoogleButton from 'react-google-button';
+import React,{useState, useEffect} from 'react';
+import './App.css'
+import { signOutWithGoogle } from './firebase.js';
+import {Navigate} from "react-router-dom";
 
 function App() {
-    
-    return(
-        <div className = "LoginContainer">
-            <div className="Login">
-                <span className = "Title">Chat App</span>
-                <span className = "Intro">Sign In Below</span>
-                <GoogleButton onClick={signInWithGoogle}>Sign In With Google</GoogleButton>
-            </div>
-        </div>
-    )
+    const [authenticated, setauthenticated] = useState(null);
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("authenticated");
+        if (loggedInUser) {
+            setauthenticated(loggedInUser);
+        } else {
+            setauthenticated(false);
+        }
+    }, []);
+    if (!authenticated){
+        return <Navigate replace to ="/" />;
+    } else {
+        return(
+            <button onClick={signOutWithGoogle}>Sign Out</button>
+        ) 
+    }
 }
 export default App;

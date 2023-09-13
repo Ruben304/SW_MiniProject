@@ -23,17 +23,19 @@ export const signInWithGoogle = () => {
         const token = credential.accessToken;
         //signed in user info
         const user = result.user;
+        localStorage.setItem("authenticated",true);
     }).catch((error) =>{
         const errorCode = error.code;
         const errorMessage = error.message;
-        const email = error.customData.email;
         const credential = GoogleAuthProvider.credentialFromError(error);
     })
 };
 
+
 export const signOutWithGoogle = () => {
     signOut(auth).then( () => {
         console.log("sign out success");
+        localStorage.setItem("authenticated",false);
     }).catch((error) => {
         console.log("sign out failed");
     });
