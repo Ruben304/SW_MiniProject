@@ -1,28 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import {View,Text,StyleSheet,TouchableOpacity,TextInput,FlatList,Button,} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  Image,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import GoogleButton from 'react-google-button';
-import { signInWithPopup, signOut } from 'firebase/auth';
-import { collection, addDoc, onSnapshot } from 'firebase/firestore';
-import { authentication, provider, firestore } from './components/config';
 import {
-  NavigationContainer,
-  useNavigation,
-} from '@react-navigation/native';
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
+import { ref, get, query,startAt, endAt } from 'firebase/database';
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  orderBy
+} from 'firebase/firestore';
+import {
+  authentication,
+  provider,
+  firestore,
+  fireDB,
+} from './components/config';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
-    // Check if the user is already signed in (e.g., on app start)
-    // You can implement this logic using Firebase authentication
-
-    // For demonstration purposes, I'm assuming the user is not signed in initially.
     setIsSignedIn(false);
+
+    const unsubscribe = onAuthStateChanged(authentication, (user) => {
+      if (user) {
+        setIsSignedIn(true);
+        fetchUserProfile(user.uid);
+      } else {
+        setIsSignedIn(false);
+        setUserProfile(null);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  const fetchUserProfile = async (uid) => {
+    try {
+      const userRef = ref(fireDB, 'users/' + uid);
+      const snapshot = await get(userRef);
+
+      if (snapshot.exists()) {
+        setUserProfile(snapshot.val());
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
 
   return (
     <NavigationContainer>
@@ -60,11 +102,24 @@ function SignInScreen() {
         const user = result.user;
         alert(`Welcome, ${user.displayName}!`);
         navigation.navigate('Chat');
+        writeUserProfile(user.uid, user.displayName, user.email, user.photoURL);
       })
       .catch((error) => {
         console.log(error.message);
       });
   }
+
+  const writeUserProfile = async (uid, displayName, email, photoURL) => {
+    try {
+      await set(ref(fireDB, 'users/' + uid), {
+        displayName,
+        email,
+        photoURL,
+      });
+    } catch (error) {
+      console.error('Error writing user profile:', error);
+    }
+  };
 
   return (
     <View style={styles.homeContainer}>
@@ -84,13 +139,12 @@ function ChatScreen() {
   const [messages, setMessages] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [displayUserProfile, setDisplayUserProfile] = useState(true);
 
-  // Firestore collection for chat messages
-  const messagesCollection = collection(firestore, 'messages');
-  // Firestore collection for user profiles
-  const usersCollection = collection(firestore, 'users');
 
-  // Load existing messages from Firestore
+  const user = authentication.currentUser;
+
   useEffect(() => {
     const unsubscribe = onSnapshot(messagesCollection, (querySnapshot) => {
       const newMessages = [];
@@ -106,65 +160,120 @@ function ChatScreen() {
     return () => unsubscribe();
   }, []);
 
+  const messagesCollection = collection(firestore, 'messages');
+  const usersCollection = collection(firestore, 'users');
+
+  useEffect(() => {
+    fetchUserProfile(user.uid);
+  }, [user]);
+
+  const fetchUserProfile = async (uid) => {
+    try {
+      const userRef = ref(fireDB, 'users/' + uid);
+      const snapshot = await get(userRef);
+
+      if (snapshot.exists()) {
+        setUserProfile(snapshot.val());
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
   const sendMessage = async () => {
-    // Add the new message to Firestore
     await addDoc(messagesCollection, {
       text: message,
       timestamp: new Date(),
-      userId: authentication.currentUser.uid, // Include user ID
+      userId: user.uid,
     });
-    setMessage(''); // Clear the input field
+    setMessage('');
   };
 
-  // Function to search for users by username or email
-  const searchUsers = async () => {
-    const q = query(usersCollection, where('username', '==', searchQuery));
-    const querySnapshot = await getDocs(q);
-
-    const matchingUsers = [];
-    querySnapshot.forEach((doc) => {
-      const userData = doc.data();
-      matchingUsers.push({ id: doc.id, ...userData });
-    });
-
-    setSearchResults(matchingUsers);
+  const handleSearchUsers = async () => {
+    try {
+      const usersRef = ref(fireDB, 'users');
+      const snapshot = await get(usersRef);
+  
+      const results = [];
+      snapshot.forEach((childSnapshot) => {
+        const user = childSnapshot.val();
+        if (
+          user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchQuery.toLowerCase())
+        ) {
+          results.push({ id: childSnapshot.key, ...user });
+        }
+      });
+  
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Error searching for users:', error);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.leftPane}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for people..."
-          value={searchQuery}
-          onChangeText={(text) => setSearchQuery(text)}
-        />
-        <Button title="Search" onPress={searchUsers} />
-        <FlatList
-          data={searchResults}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity>
-              <Text>{item.username}</Text>
-            </TouchableOpacity>
+      {/* Display user profile data */}
+      {userProfile && !searchQuery && ( // Only display when searchQuery is empty
+        <View style={styles.userProfile}>
+          {userProfile.photoURL && (
+            <Image source={{ uri: userProfile.photoURL }} style={styles.userAvatar} />
           )}
-        />
-      </View>
-      <View style={styles.rightPane}>
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <Text>{item.text}</Text>}
-        />
-        <View style={styles.inputContainer}>
-          <TextInput
-            value={message}
-            onChangeText={(text) => setMessage(text)}
-            placeholder="Type your message..."
-          />
-          <Button title="Send" onPress={sendMessage} />
+          <Text style={styles.userName}>{userProfile.displayName}</Text>
+          <Text style={styles.userEmail}>{userProfile.email}</Text>
         </View>
-      </View>
+      )}
+
+      {/* Search input */}
+      <TextInput
+        placeholder="Search for users by name or email"
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+      />
+      <TouchableOpacity onPress={handleSearchUsers}>
+        <Text>Search Users</Text>
+      </TouchableOpacity>
+
+      {/* Display search results in a dropdown */}
+      {searchQuery.length > 0 && searchResults.length > 0 && (
+        <View style={styles.searchResultsDropdown}>
+          <FlatList
+            data={searchResults}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  // You can customize this action as needed
+                  // For example, you can initiate a chat with the selected user
+                  initiateChatWithUser(item);
+                }}
+              >
+                <Text>{item.displayName}</Text>
+                <Text>{item.email}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
+
+      {/* Your chat input and messages */}
+      <TextInput
+        placeholder="Enter your message..."
+        value={message}
+        onChangeText={(text) => setMessage(text)}
+      />
+      <TouchableOpacity onPress={sendMessage}>
+        <Text>Send</Text>
+      </TouchableOpacity>
+
+      {/* Display chat messages */}
+      <FlatList
+        data={messages}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Text>{item.text}</Text>
+        )}
+      />
     </View>
   );
 }
@@ -247,191 +356,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  leftPane: {
-    flex: 1,
-    backgroundColor: '#f0f0f0', // Adjust the color as needed
-    padding: 16,
-  },
-  searchInput: {
-    backgroundColor: '#fff',
-    padding: 8,
-    marginBottom: 16,
-    borderRadius: 5,
-  },
-  rightPane: {
-    flex: 2,
-  },
-  searchResults: {
-    flex: 1,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 8,
-    borderRadius: 5,
-    marginBottom: 16,
-  }
 });
-
-
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-// import { StatusBar } from 'expo-status-bar';
-// import GoogleButton from 'react-google-button';
-// import { signInWithPopup, signOut } from 'firebase/auth';
-// import { authentication, provider } from './components/config';
-// import 'firebase/firestore';
-// import { NavigationContainer, useNavigation } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-// const Stack = createNativeStackNavigator();
-
-// export default function App() {
-//   const [isSignedIn, setIsSignedIn] = useState(false); // Lift the state to the App component
-
-//   useEffect(() => {
-//     // Check if the user is already signed in (e.g., on app start)
-//     // You can implement this logic using Firebase authentication
-
-//     // For demonstration purposes, I'm assuming the user is not signed in initially.
-//     setIsSignedIn(false);
-//   }, []);
-
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator initialRouteName={isSignedIn ? "Chat" : "Home"}>
-//         <Stack.Screen
-//           name="Home"
-//           component={SignInScreen}
-//           options={{ headerShown: true }}
-//         />
-//         <Stack.Screen
-//           name="Chat"
-//           component={ChatScreen}
-//           options={({ navigation }) => ({
-//             title: 'Chat',
-//             headerRight: () => (
-//               <SignOutButton
-//                 navigation={navigation}
-//                 setIsSignedIn={setIsSignedIn} // Pass setIsSignedIn as a prop
-//               />
-//             ),
-//             headerLeft: null, // Hide the back arrow
-//           })}
-//         />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// }
-
-// function SignInScreen() {
-//   const navigation = useNavigation();
-
-//   function signUp() {
-//     signInWithPopup(authentication, provider)
-//       .then((result) => {
-//         const user = result.user;
-//         alert(`Welcome, ${user.displayName}!`);
-//         navigation.navigate('Chat');
-//       })
-//       .catch((error) => {
-//         console.log(error.message);
-//       });
-//   }
-
-//   return (
-//     <View style={styles.homeContainer}>
-//       <View style={styles.whiteSquare}></View>
-//       <View style={styles.contentContainer}>
-//         <Text style={styles.logoText}>Mood Chat</Text>
-//         <Text style={styles.boldText}>Sign in to chat</Text>
-//         <StatusBar style="auto" />
-//         <GoogleButton onClick={signUp} />
-//       </View>
-//     </View>
-//   );
-// }
-
-// function ChatScreen() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Welcome to the Chat Screen!</Text>
-//     </View>
-//   );
-// }
-
-// function SignOutButton({ navigation, setIsSignedIn }) {
-//   function handleSignOut() {
-//     // Perform sign out logic here
-//     // ...
-//     signOut(authentication)
-//       .then(() => {
-//         alert('User signed out successfully.');
-//         setIsSignedIn(false); // Update the state to indicate signed out
-//         navigation.navigate('Home');
-//       })
-//       .catch((error) => {
-//         console.log(error.message);
-//       });
-//   }
-
-//   return (
-//     <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
-//       <Text style={styles.signOutButtonText}>Sign Out</Text>
-//     </TouchableOpacity>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   homeContainer: {
-//     flex: 1,
-//     backgroundColor: 'lavendar',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   whiteSquare: {
-//     width: 400, // Updated width to 400
-//     height: 225, // Updated height to 225
-//     backgroundColor: 'white',
-//     position: 'absolute',
-//     top: '50%', // Center vertically
-//     left: '50%', // Center horizontally
-//     marginLeft: -200, // Half of the width (negative margin)
-//     marginTop: -112.5, // Half of the height (negative margin)
-//     borderRadius: 10
-//   },
-//   contentContainer: {
-//     flex: 1,
-//     backgroundColor: 'transparent',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   container: {
-//     flex: 1,
-//     backgroundColor: 'lavender',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   logoText: {
-//     fontWeight: 'bold', // Make the text bold
-//     fontSize: 48, // Increase the font size
-//     marginBottom: 20, // Add some space below the text
-//     color: 'black',
-//   },
-//   boldText: {
-//     fontWeight: 'bold',
-//     fontSize: 22,
-//     marginBottom: 10,
-//     color: 'black',
-//   },
-//   signOutButton: {
-//     padding: 10,
-//     marginRight: 10,
-//   },
-//   signOutButtonText: {
-//     color: 'black',
-//     fontWeight: 'bold',
-//     fontSize: 16,
-//   },
-// });
