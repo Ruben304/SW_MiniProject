@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {auth, provider, firestore} from './firebase.js'
 import GoogleButton from 'react-google-button';
 import {signInWithPopup, GoogleAuthProvider, signOut} from 'firebase/auth'
@@ -62,6 +62,7 @@ function Room() {
     const query = messagesRef.orderBy('createdAt').limit(25);
     const [messages] = useCollectionData(query,{idField: 'id'});
     const [formValue,setFormValue] = useState('');
+    const dummy = useRef();
 
     const sendMessage = async(e) =>{
         e.preventDefault();
@@ -73,6 +74,7 @@ function Room() {
             uid
         })
         setFormValue(' ');
+        dummy.current.scrollIntoView({behavior: 'smooth'});
     }
 
     return(
@@ -80,8 +82,9 @@ function Room() {
             <div className='LogoutContainer'>
                 <button className='Logout' onClick={signOutWithGoogle}>Sign Out</button>
             </div>
-            <div>
+            <div className='Messages'>
                 {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
+                <span ref={dummy}></span>
             </div>
             <form onSubmit={sendMessage}>
                 <input value = {formValue} onChange={(e) => setFormValue(e.target.value)}/>
