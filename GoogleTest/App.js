@@ -99,8 +99,8 @@ function SignInScreen() {
   function signUp() {
     signInWithPopup(authentication, provider)
       .then((result) => {
-        const user = result.user;
-        alert(`Welcome, ${user.displayName}!`);
+        const user = result.user;    
+        //alert(`Welcome, ${user.displayName}!`);
         navigation.navigate('Chat');
         writeUserProfile(user.uid, user.displayName, user.email, user.photoURL);
       })
@@ -125,7 +125,7 @@ function SignInScreen() {
     <View style={styles.homeContainer}>
       <View style={styles.whiteSquare}></View>
       <View style={styles.contentContainer}>
-        <Text style={styles.logoText}>Mood Chat</Text>
+        <Text style={styles.logoText}>Chit Chat</Text>
         <Text style={styles.boldText}>Sign in to chat</Text>
         <StatusBar style="auto" />
         <GoogleButton onClick={signUp} />
@@ -219,28 +219,35 @@ function ChatScreen() {
           {userProfile.photoURL && (
             <Image source={{ uri: userProfile.photoURL }} style={styles.userAvatar} />
           )}
-          <Text style={styles.userName}>{userProfile.displayName}</Text>
-          <Text style={styles.userEmail}>{userProfile.email}</Text>
+          <Text style={styles.userName}>Welcome {userProfile.displayName}!</Text>
         </View>
       )}
 
       {/* Search input */}
-      <TextInput
-        placeholder="Search for users by name or email"
-        value={searchQuery}
-        onChangeText={(text) => setSearchQuery(text)}
-      />
-      <TouchableOpacity onPress={handleSearchUsers}>
-        <Text>Search Users</Text>
-      </TouchableOpacity>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search for users by name or email"
+          value={searchQuery}
+          onChangeText={(text) => setSearchQuery(text)}
+        />
+        <TouchableOpacity
+          style={styles.searchButton}
+          onPress={handleSearchUsers}
+        >
+          <Text style={styles.searchButtonText}>Search Users</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Display search results in a dropdown */}
       {searchQuery.length > 0 && searchResults.length > 0 && (
         <View style={styles.searchResultsDropdown}>
-          <FlatList
-            data={searchResults}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
+        <FlatList
+          data={searchResults}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <>
+              {/* Your item content */}
               <TouchableOpacity
                 onPress={() => {
                   // You can customize this action as needed
@@ -251,8 +258,12 @@ function ChatScreen() {
                 <Text>{item.displayName}</Text>
                 <Text>{item.email}</Text>
               </TouchableOpacity>
-            )}
-          />
+              
+              {/* Add a custom separator */}
+              {index < searchResults.length - 1 && <View style={styles.separator} />}
+            </>
+          )}
+        />
         </View>
       )}
 
@@ -353,7 +364,47 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     paddingVertical: 8,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 8,
+    marginTop: 10,
+    borderRadius: 2,
+    marginBottom: 0,
+  },
+  searchInput: {
+    flex: 1,
+    paddingHorizontal: 8,
+    height: 35,
+  },
+  searchButton: {
+    backgroundColor: '#4285F4',
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  searchButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  userName:{
+    fontWeight: 'bold',
+    margin: 8,
+  },
+  searchResultsDropdown: {
+    backgroundColor: 'white', // Add white background color here
+    borderRadius: 2,
+    padding: 10, // Add padding for spacing
+    width: 305,
+  },
+  separator: {
+    borderBottomWidth: 1, // Adjust the width as needed
+    borderBottomColor: '#d3d3d3', // Adjust the color as needed
+    marginHorizontal: 5, // Adjust the margin as needed
+    marginVertical: 5, // Adjust the vertical margin to control the length
   },
 });
