@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {auth, provider, firestore} from './firebase.js'
 import GoogleButton from 'react-google-button';
 import {signInWithPopup, GoogleAuthProvider, signOut} from 'firebase/auth'
@@ -76,8 +76,8 @@ function Room() {
     }
 
     return(
-        <>
-            <div className='Logout Container'>
+        <div className='AppContainer'>
+            <div className='LogoutContainer'>
                 <button className='Logout' onClick={signOutWithGoogle}>Sign Out</button>
             </div>
             <div>
@@ -87,7 +87,7 @@ function Room() {
                 <input value = {formValue} onChange={(e) => setFormValue(e.target.value)}/>
                 <button type="submit">send message</button>
             </form>
-        </>
+        </div>
     ) 
 }
 

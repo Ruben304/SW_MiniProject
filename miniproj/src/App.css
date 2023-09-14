@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f2f7f2;;
+    background-color: #f2f7f2;
     
     .Login{
       display: flex;
@@ -26,22 +26,53 @@
         padding: 1px;
       }
     }
-  }
-
-.message{
-    display:flex;
-    align-items:center;
 }
 
-.sent{
-    flex-direction: row-reverse;
-}
+.AppContainer{
+    background-color: #f2f7f2;
 
-.sent p{
-    background-color: blue;
-    align-self:flex-end;
-}
+    .LogoutContainer{
+        display:flex;
+        background-color: #98938C;
+        flex-direction: row-reverse;
+        .Logout{
+            padding:10px;
+            margin: 10px;
+            border: none;
+            display: inline-block;
+            font-size: 16px;
+            background-color: #f2f7f2;
+            cursor: pointer;
+        }
+    }
 
-.received p{
-    background-color: green;
+    form{
+        width:100vh;
+    }
+
+    .message{
+        display:flex;
+        align-items:center;
+        color: white;
+    }
+    
+    p{
+        margin-bottom: 0px;
+        padding: 5px 10px;
+        border-radius: 25px;
+        text-align: center;
+    }
+
+    .sent{
+        flex-direction: row-reverse;
+    }
+
+    .sent p{
+        background-color: #1982FC;
+        align-self:flex-end;
+    }
+    
+    .received p{
+        background-color: #43CC47;   
+    }
 }
