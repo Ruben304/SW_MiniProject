@@ -91,7 +91,7 @@ function Room() {
                 <button type="submit">send message</button>
             </form>
         </div>
-    ) 
+    )
 }
 
 function ChatMessage(props) {

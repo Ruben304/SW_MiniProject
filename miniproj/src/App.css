@@ -1,6 +1,7 @@
 .App{
     margin: 0px;
     max-width: 720px;
+    min-height: 500px;
 }
 
 .LoginContainer{
@@ -34,7 +35,6 @@
 
 .AppContainer{
     background-color: #f2f7f2;
-    
     .LogoutContainer{
         display:flex;
         background-color: #98938C;
@@ -57,11 +57,6 @@
         overflow-y: scroll;
         height: 87vh;
     }
-
-    .Messages::-webkit-scrollbar{
-        width: 0.25rem;
-    }
-
 
     form{
         height: 5vh;
