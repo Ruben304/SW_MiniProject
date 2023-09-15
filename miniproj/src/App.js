@@ -1,8 +1,8 @@
 import './App.css'
 import React, {useState, useRef} from 'react';
-import {auth, provider, firestore} from './firebase.js'
-import GoogleButton from 'react-google-button';
-import {signInWithPopup, GoogleAuthProvider, signOut} from 'firebase/auth'
+import Login from './Login.js';
+import {signOut} from 'firebase/auth';
+import {auth, firestore} from './firebase.js';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
@@ -20,34 +20,6 @@ function App(){
     );
 }
 
-function Login() {
-
-    const signInWithGoogle = () => {
-        signInWithPopup(auth,provider).then((result) => {
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            const user = result.user;
-            localStorage.setItem("token",token);
-            localStorage.setItem("user",user.displayName);
-        }).catch((error) =>{
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            const credential = GoogleAuthProvider.credentialFromError(error);
-        })
-    };
-
-    return(
-        <div className = "LoginContainer">
-            <div className="Login">
-                <span className = "Title">Chat App</span>
-                <span className = "Intro">Sign In Below</span>
-                <GoogleButton onClick={signInWithGoogle}>Sign In With Google</GoogleButton>
-            </div>
-        </div>
-    )
-}
-
-
 function Room() {
 
     const signOutWithGoogle = () => {
@@ -59,7 +31,7 @@ function Room() {
     };
 
     const messagesRef = firestore.collection('messages');
-    const query = messagesRef.orderBy('createdAt').limit(25);
+    const query = messagesRef.orderBy('createdAt');
     const [messages] = useCollectionData(query,{idField: 'id'});
     const [formValue,setFormValue] = useState('');
     const dummy = useRef();
