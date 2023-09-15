@@ -29,7 +29,7 @@ function Room() {
             console.log("sign out failed");
         });
     };
-
+    
     const messagesRef = firestore.collection('messages');
     const query = messagesRef.orderBy('createdAt');
     const [messages] = useCollectionData(query,{idField: 'id'});

@@ -1,7 +1,7 @@
 //import {initializeApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider} from 'firebase/auth';
 import firebase from 'firebase/compat/app';
-import { getFirestore } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 import 'firebase/compat/firestore';
 
 const firebaseConfig = {
@@ -11,10 +11,12 @@ const firebaseConfig = {
     storageBucket: "mood-chat-9a7f7.appspot.com",
     messagingSenderId: "15499134485",
     appId: "1:15499134485:web:477886be2ebc25c6cdb01c",
-    measurementId: "G-SFE17R7FJE"
+    measurementId: "G-SFE17R7FJE",
+    databaseURL: "https://mood-chat-9a7f7-default-rtdb.firebaseio.com"
 };
   
 export const app = firebase.initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
 export const firestore = firebase.firestore();
+export const db = getDatabase(app);

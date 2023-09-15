@@ -2,9 +2,17 @@ import './Login.css'
 import React from 'react';
 import GoogleButton from 'react-google-button';
 import {signInWithPopup, GoogleAuthProvider} from 'firebase/auth'
-import {auth, provider} from './firebase.js'
+import {auth, provider, db} from './firebase.js'
+import {ref,set } from 'firebase/database';
 
 function Login() {
+    function writeUserData(uid, displayName, email){
+        set(ref(db,'users/'+uid),{
+            displayName: displayName,
+            emai:email
+        });
+    }
+
     const signInWithGoogle = () => {
         signInWithPopup(auth,provider).then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -12,6 +20,7 @@ function Login() {
             const user = result.user;
             localStorage.setItem("token",token);
             localStorage.setItem("user",user.displayName);
+            writeUserData(user.uid,user.displayName, user.email);
         }).catch((error) =>{
             const errorCode = error.code;
             const errorMessage = error.message;
