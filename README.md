@@ -13,7 +13,7 @@ Here is the youtube video link to see the demo of our project: https://youtu.be/
 - React for the front end 
 - Firebase for the user login authentication, user, and message storage
 
-## Timeline: 
+## Timeline/Design Decisions: 
   The first part of the project was setting up the environment such as creating a firebase and configuring the correct dependencies 
 A firebase can be created using this link: https://console.firebase.google.com/, ensuring you have all the dependencies for react and firebase installed. We chose firebase for the backend as its API allowed for easy access to its database, and we chose to create a website as we thought it would be the simpliest, and as such we chose react for the frontend as it allowed for seamless connection between js, html, and css to create a user-friendly website. 
 
@@ -24,10 +24,9 @@ once logged in then we can move on to the chat page. Furthermore, upon login, th
 
   In the chat page, there are two main features, search and chat. First we will go over the search feature, and things to do before we start coding is setting up a database where
 the user information can be stored. Going to the Firebase website and setting that up will show you the users that are stored. Now we can make a "profile" with the users that have
-successfully logged in. We used an array of methods that essentially populate the matching users when a search is queried. If one or more users match that then their name and email will display in the dropdown. some resources I used for this were https://firebase.google.com/docs/database/web/start, ChatGPT, and https://youtu.be/q1bxyyKh3Dc?si=xgQPuOdeIRPwBQbz.
+successfully logged in. We used an array of methods that essentially populate the matching users when a search is queried. If one or more users match that then their name and email will display in the dropdown. some resources I used for this were https://firebase.google.com/docs/database/web/start, ChatGPT, and https://youtu.be/q1bxyyKh3Dc?si=xgQPuOdeIRPwBQbz. Then after selecting who the user wants to message, the search dropdown closes which leaves more space for messaging, and the receipients info is stored within a variable in the code. 
 
-For the chatting application of the app, after selecting the receipient to whom the messages will be sent to, we filter the messages in the Firestore database to only messages that has both the user id of you and the person you are texting. And every message you send is sent to the entire database, however you can only see messages between the recipient and the user, and the messages are displayed in chronological order. Using these sources https://github.com/fireship-io/react-firebase-chat https://www.geeksforgeeks.org/user-to-user-private-chat-app-using-reactjs-and-firebase-without-socket-programming/, first I made the send and receieve system to receieve all messages and the css separates the messages as blue and on the right if it is sent by the user and green and on the left if it is not. Then I filtered the messages so it only displayed messages from both the user and recipients after selecting a user from search.
-
+For the chatting application of the app, after selecting the receipient to whom the messages will be sent to, we create a unique string consisting of the uid of both the sender and receipient and we create a chatroom with that unique id in the database. Then the user can message that specific recipient. This was done by first figuring out how to send and receieve messages from the database. Then we just have to create a unique room id which is just the concatenation of the two users ID, and rather than sending and receiving messages from the entire database, both users will only see messages within this chatroom. Using these sources https://github.com/fireship-io/react-firebase-chat https://www.geeksforgeeks.org/user-to-user-private-chat-app-using-reactjs-and-firebase-without-socket-programming/, and custom css to separate the messages as blue and on the right if it is sent by the user and green and on the left if it is not. We also added some code to display who you are chatting with on the top left.
 
   
 
