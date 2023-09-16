@@ -1,11 +1,24 @@
 9/11
+Starting tests for Google login
+Google login test passed
+Starting tests on sending and retreiving messages from database
 
 9/12
+Starting tests for searching
+Retreiving messages from database test passed
+Sending messages to database test passed
 
 9/13
+Search test passed
+Starting tests with both search and google login
 
 9/14
+Starting tests with messaging specific users
 
 9/15
+Test for login -> search user passed
 
 9/16
+Test for messaging specific users passed
+Test for searching a user and messaging the user passed
+Test for login -> search user -> message searched user passed
