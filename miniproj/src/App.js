@@ -1,8 +1,8 @@
 import './App.css'
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import Login from './Login.js';
 import {signOut} from 'firebase/auth';
-import {auth, firestore} from './firebase.js';
+import {auth, firestore, db} from './firebase.js';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
@@ -30,7 +30,12 @@ function Room() {
         });
     };
     
-    const messagesRef = firestore.collection('messages');
+    const uid = auth.currentUser.uid;
+    const ruid = (uid == "FR87iOE3uPgitxALP22CCqqTRL53") ? "EKk6291rvrYXpwUzfUvuXJ5Po1I3" : "FR87iOE3uPgitxALP22CCqqTRL53";
+    const collection = (uid < ruid) ? uid+ruid : ruid+uid;
+    console.log(collection);
+    
+    const messagesRef = firestore.collection(collection);
     const query = messagesRef.orderBy('createdAt');
     const [messages] = useCollectionData(query,{idField: 'id'});
     const [formValue,setFormValue] = useState('');
