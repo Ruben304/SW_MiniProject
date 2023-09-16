@@ -13,11 +13,12 @@
       background-color: white;
       gap: 15px;
       height: 400px;
-      width: 300px;
+      width: 325px;
       border-radius: 20px;
   
       .Title{
         font-size: 40px;
+        font-weight: bold;
         padding-bottom: 40px;
       }
       .Intro{

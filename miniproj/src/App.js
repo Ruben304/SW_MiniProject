@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import Login from './Login.js';
 import {signOut} from 'firebase/auth';
 import {auth, firestore, db} from './firebase.js';
@@ -102,9 +102,9 @@ function Room() {
             </div>
             <div className='SearchResults'>
                 <form onSubmit={handleSearchUsers}>
-                    <input value={searchQuery} placeholder='search'
+                    <input value={searchQuery} placeholder=' search name or email'
                     onChange={(text) => setSearchQuery(text.target.value)}/>
-                    <button>Search Users</button>
+                    <button className = "searchButton">Search Users</button>
                 </form>
                 <div className="searchResultsDropdown" style={{ display: showSearchResults ? 'block' : 'none' }}>
                     <ul>
@@ -123,7 +123,7 @@ function Room() {
                 {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
                 <span ref={dummy}></span>
             </div>
-            {collection != 'placeholder' && <form onSubmit={sendMessage}>
+            {collection !== 'placeholder' && <form onSubmit={sendMessage}>
                 <input value = {formValue} onChange={(e) => setFormValue(e.target.value)}/>
                 <button type="submit">send message</button>
             </form>}

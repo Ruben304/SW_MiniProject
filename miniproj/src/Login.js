@@ -33,7 +33,7 @@ function Login() {
         <div className = "LoginContainer">
             <div className="Login">
                 <span className = "Title">Chat App</span>
-                <span className = "Intro">Sign In Below</span>
+                <span className = "Intro">Sign In to Chat</span>
                 <GoogleButton onClick={signInWithGoogle}>Sign In With Google</GoogleButton>
             </div>
         </div>
