@@ -2,6 +2,9 @@ We used ChatGPT for debugging, and it helped us create some functions
 
 
 In specific:
-const handleSearchUsers -> helped debug when the function was only searching once, error was in setSearchQuery(''). Originally it was setSearchQuery(' '). The spacing between the quotes broke the searching system. Also helped connect our code to the firebase API to pull user.displayname and user.email .
+const handleSearchUsers -> helped debug when the function was only searching once, error was in setSearchQuery(''). Originally it was 
+setSearchQuery(' '). The spacing between the quotes broke the searching system. Also helped connect our code to the firebase API to 
+pull user.displayname and user.email .
 
-<div className = "searchResults> -> helped create and debug the html and css portion of the search code as well, we were having trouble displaying the username and email and connecting the html and css portion to the js function, ChatGPT helped solve this.
+<div className = "searchResults> -> helped create and debug the html and css portion of the search code as well, we were having trouble 
+displaying the username and email and connecting the html and css portion to the js function, ChatGPT helped solve this.
