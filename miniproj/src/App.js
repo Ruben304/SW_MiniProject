@@ -30,17 +30,20 @@ function Room() {
             console.log("sign out failed");
         });
     };
-    
+
+    const [showSearchResults, setShowSearchResults] = useState(false);
     const [collection, setcollection] = useState('placeholder');
     const [ruser, setruser] = useState(' ');
     const uid = auth.currentUser.uid;
-    function selectRuid(user){
+    function selectRuid(user) {
         const ruid = user.id;
-        const temp = (uid < ruid) ? uid+ruid : ruid+uid;
+        const temp = uid < ruid ? uid + ruid : ruid + uid;
         setcollection(temp);
         setruser(user.displayName)
+        setShowSearchResults(false); // Hide the dropdown when an option is selected
         console.log(collection);
     }
+    
     
     const messagesRef = firestore.collection(collection);
     const query = messagesRef.orderBy('createdAt');
@@ -66,27 +69,29 @@ function Room() {
     const handleSearchUsers = async (text) => {
         text.preventDefault();
         try {
-          const usersRef = ref(db, 'users');
-          const snapshot = await get(usersRef);
-      
-          const results = [];
-          snapshot.forEach((childSnapshot) => {
-            const user = childSnapshot.val();
-            console.log(user.displayName);
-            if (
-              user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.email.toLowerCase().includes(searchQuery.toLowerCase())
-            ) {
-              results.push({ id: childSnapshot.key, ...user });
-            }
-          });
-      
-          setSearchResults(results);
+            const usersRef = ref(db, 'users');
+            const snapshot = await get(usersRef);
+    
+            const results = [];
+            snapshot.forEach((childSnapshot) => {
+                const user = childSnapshot.val();
+                console.log(user.displayName);
+                if (
+                    user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+                ) {
+                    results.push({ id: childSnapshot.key, ...user });
+                }
+            });
+    
+            setSearchResults(results);
+            setShowSearchResults(true); // Show the dropdown when results are available
         } catch (error) {
-          console.error('Error searching for users:', error);
+            console.error('Error searching for users:', error);
         }
         setSearchQuery('');
-      };
+    };
+    
 
 
     return(
@@ -101,14 +106,14 @@ function Room() {
                     onChange={(text) => setSearchQuery(text.target.value)}/>
                     <button>Search Users</button>
                 </form>
-                <div className = 'searchResultsDropdown'>
+                <div className="searchResultsDropdown" style={{ display: showSearchResults ? 'block' : 'none' }}>
                     <ul>
-                        {searchResults.map((user,index) => (
-                            <li key={(user.id)}>
-                                <div onClick={()=>selectRuid(user)}>
-                                    <p class="userDisplayName">{user.displayName} - {user.email}</p>
+                        {searchResults.map((user, index) => (
+                            <li key={user.id}>
+                                <div onClick={() => selectRuid(user)}>
+                                    <p className="userDisplayName">{user.displayName} - {user.email}</p>
                                 </div>
-                                {index < searchResults.length -1 && <hr className="separator" />}
+                                {index < searchResults.length - 1 && <hr className="separator" />}
                             </li>
                         ))}
                     </ul>
