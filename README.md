@@ -1,8 +1,8 @@
 # SW_MiniProject
 
 ## Collaborators: 
-- Ruben Carbajal 
 - Johnson Yang
+- Ruben Carbajal 
 
 ## Project:
 Welcome to Chit Chat* this is a messaging app you can use to talk between friends, acquaintances, or any user signed up
