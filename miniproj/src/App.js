@@ -32,13 +32,13 @@ function Room() {
     };
     
     const [collection, setcollection] = useState('placeholder');
-    //const [ruser, setruser] = useState(' ');
+    const [ruser, setruser] = useState(' ');
     const uid = auth.currentUser.uid;
     function selectRuid(user){
         const ruid = user.id;
         const temp = (uid < ruid) ? uid+ruid : ruid+uid;
         setcollection(temp);
-        //setruser(user)
+        setruser(user.displayName)
         console.log(collection);
     }
     
@@ -92,7 +92,7 @@ function Room() {
     return(
         <div className='AppContainer'>
             <div className='LogoutContainer'>
-                <p className='Receiver'>Messaging: </p>
+                <p className='Receiver'>Messaging: {ruser}</p>
                 <button className='Logout' onClick={signOutWithGoogle}>Sign Out</button>
             </div>
             <div className='SearchResults'>

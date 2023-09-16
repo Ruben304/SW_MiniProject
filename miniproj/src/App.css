@@ -9,8 +9,11 @@
     .LogoutContainer{
         display:flex;
         background-color: #98938C;
-        flex-direction: row-reverse;
         height: 8vh;
+        justify-content: center;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
 
         .Logout{
             border: none;
@@ -19,6 +22,11 @@
             background-color: #f2f7f2;
             cursor: pointer;
             margin: 15px;
+        }
+        
+        .Receiver{
+            justify-content: center;
+            align-items: center;
         }
     }
     .SearchResults{
