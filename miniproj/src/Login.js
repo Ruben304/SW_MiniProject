@@ -9,7 +9,7 @@ function Login() {
     function writeUserData(uid, displayName, email){
         set(ref(db,'users/'+uid),{
             displayName: displayName,
-            emai:email,
+            email:email,
             uid: uid
         });
     }

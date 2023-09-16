@@ -21,6 +21,19 @@
             margin: 15px;
         }
     }
+    .SearchResults{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        .searchResultsDropdown{
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    
 
     .sent{
         flex-direction: row-reverse;
@@ -75,3 +88,6 @@ p{
     text-align: center;
 }
 
+ul{
+    list-style: none;
+}
