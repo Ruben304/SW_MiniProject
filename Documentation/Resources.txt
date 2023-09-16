@@ -1,9 +1,0 @@
-This is the link, i used to create a react native app env: https://reactnative.dev/blog/2017/03/13/introducing-create-react-native-app
-For the firebase, first we had to create a firebase project on the firebase website and create a project on their.
-Then link it together using this link: https://firebase.google.com/docs/web/setup?authuser=0
-This is what were using to trying to add authentcation: https://firebase.google.com/docs/auth/web/password-auth?authuser=0
-
-These are other links they have mentioned in the powerpoint: 
-https://cloud.google.com/natural-language (google cloud LLM)
-https://firebase.google.com/docs/firestore/library-integrations (firebase libraries)
-https://www.npmjs.com/package/react-firebase-hooks (react firebase hooks)
