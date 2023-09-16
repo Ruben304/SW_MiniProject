@@ -9,6 +9,8 @@ Welcome to Chit Chat* this is a messaging app you can use to talk between friend
 
 ## Demo:
 Here is the youtube video link to see the demo of our project: https://youtu.be/t92t7-4fDeI
+We have also included some screenshots in the documentation -> screenshots folder of ther different behaviors our application has.
+
 ## Tools: 
 - React for the front end 
 - Firebase for the user login authentication, user, and message storage
