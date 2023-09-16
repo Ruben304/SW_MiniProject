@@ -31,15 +31,16 @@ function Room() {
         });
     };
     
+    const [collection, setcollection] = useState('placeholder');
 
     const uid = auth.currentUser.uid;
-    let collection = 'placeholder';
     function selectRuid(user){
-        const ruid = user.id;
-        collection = (uid < ruid) ? uid+ruid : ruid+uid;
+        const ruid = user
+        const temp = (uid < ruid) ? uid+ruid : ruid+uid;
+        setcollection(temp);
+        console.log(collection);
     }
     //const ruid = (uid == "FR87iOE3uPgitxALP22CCqqTRL53") ? "EKk6291rvrYXpwUzfUvuXJ5Po1I3" : "FR87iOE3uPgitxALP22CCqqTRL53";
-    console.log(collection);
     
     const messagesRef = firestore.collection(collection);
     const query = messagesRef.orderBy('createdAt');
@@ -74,7 +75,7 @@ function Room() {
             console.log(user.displayName);
             if (
               user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
-              || user.email.toLowerCase().includes(searchQuery.toLowerCase())
+              //|| user.email.toLowerCase().includes(searchQuery.toLowerCase())
             ) {
               results.push({ id: childSnapshot.key, ...user });
             }
@@ -103,7 +104,7 @@ function Room() {
                     <ul>
                         {searchResults.map((user,index) => (
                             <li key={(user.id)}>
-                                <div onClick={()=>selectRuid(user)}>
+                                <div onClick={()=>selectRuid(user.id)}>
                                     <p>{user.displayName}</p>
                                     <p>{user.email}</p>
                                 </div>
