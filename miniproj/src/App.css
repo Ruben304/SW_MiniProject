@@ -9,7 +9,7 @@
     .LogoutContainer{
         display:flex;
         background-color: #98938C;
-        height: 8vh;
+        height: 7vh;
         justify-content: center;
         align-items: center;
         justify-content: space-between;
@@ -72,7 +72,7 @@
         padding-left: 5px;
         padding-right: 5px;
         overflow-y: scroll;
-        height: 70vh;
+        height: 83vh;
     }
 }
 
