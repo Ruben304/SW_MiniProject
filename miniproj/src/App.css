@@ -52,7 +52,6 @@
 form{
     height: 5vh;
     width:100%;
-    position: fixed;
     display:flex;
     font-size: 1.5rem;
 }

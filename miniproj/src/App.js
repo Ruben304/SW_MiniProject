@@ -7,6 +7,7 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import {ref, get} from 'firebase/database'
 
 function App(){
     const [user] = useAuthState(auth);
@@ -30,9 +31,14 @@ function Room() {
         });
     };
     
+
     const uid = auth.currentUser.uid;
-    const ruid = (uid == "FR87iOE3uPgitxALP22CCqqTRL53") ? "EKk6291rvrYXpwUzfUvuXJ5Po1I3" : "FR87iOE3uPgitxALP22CCqqTRL53";
-    const collection = (uid < ruid) ? uid+ruid : ruid+uid;
+    let collection = 'placeholder';
+    function selectRuid(user){
+        const ruid = user.id;
+        collection = (uid < ruid) ? uid+ruid : ruid+uid;
+    }
+    //const ruid = (uid == "FR87iOE3uPgitxALP22CCqqTRL53") ? "EKk6291rvrYXpwUzfUvuXJ5Po1I3" : "FR87iOE3uPgitxALP22CCqqTRL53";
     console.log(collection);
     
     const messagesRef = firestore.collection(collection);
@@ -54,19 +60,67 @@ function Room() {
         dummy.current.scrollIntoView({behavior: 'smooth'});
     }
 
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const handleSearchUsers = async (text) => {
+        text.preventDefault();
+        try {
+          const usersRef = ref(db, 'users');
+          const snapshot = await get(usersRef);
+      
+          const results = [];
+          snapshot.forEach((childSnapshot) => {
+            const user = childSnapshot.val();
+            console.log(user.displayName);
+            if (
+              user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+              || user.email.toLowerCase().includes(searchQuery.toLowerCase())
+            ) {
+              results.push({ id: childSnapshot.key, ...user });
+            }
+          });
+      
+          setSearchResults(results);
+        } catch (error) {
+          console.error('Error searching for users:', error);
+        }
+        setSearchQuery('');
+      };
+
+
     return(
         <div className='AppContainer'>
             <div className='LogoutContainer'>
                 <button className='Logout' onClick={signOutWithGoogle}>Sign Out</button>
             </div>
+            <div className='SearchResults'>
+                <form onSubmit={handleSearchUsers}>
+                    <input value={searchQuery} placeholder='search'
+                    onChange={(text) => setSearchQuery(text.target.value)}/>
+                    <button>Search Users</button>
+                </form>
+                <div className = 'searchResultsDropdown'>
+                    <ul>
+                        {searchResults.map((user,index) => (
+                            <li key={(user.id)}>
+                                <div onClick={()=>selectRuid(user)}>
+                                    <p>{user.displayName}</p>
+                                    <p>{user.email}</p>
+                                </div>
+                                {index < searchResults.length -1 && <hr className="separator" />}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
             <div className='Messages'>
                 {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
                 <span ref={dummy}></span>
             </div>
-            <form onSubmit={sendMessage}>
+            {collection != 'placeholder' && <form onSubmit={sendMessage}>
                 <input value = {formValue} onChange={(e) => setFormValue(e.target.value)}/>
                 <button type="submit">send message</button>
-            </form>
+            </form>}
         </div>
     )
 }
