@@ -13,7 +13,7 @@ Welcome to Chit Chat* this is a messaging app you can use to talk between friend
 
 ## Timeline: 
   The first part of the project was setting up the environment such as creating a firebase and configuring the correct dependencies 
-A firebase can be created using this link: https://console.firebase.google.com/, ensuring you have all the dependencies for react and firebase installed.
+A firebase can be created using this link: https://console.firebase.google.com/, ensuring you have all the dependencies for react and firebase installed. We chose firebase for the backend as its API allowed for easy access to its database, and we chose to create a website as we thought it would be the simpliest, and as such we chose react for the frontend as it allowed for seamless connection between js, html, and css to create a user-friendly website. 
 
   Now we work on configuring the authentication for the application. We start by enabling this feature on the Firebase website and choosing the Google login method. There are other ways to do it such as regular email and password or Facebook login but Google login seemed the most intuitive and gets more information about the user such as 
 name, email, and photo. Some resources for this part are: https://firebase.google.com/docs/auth/web/google-signin and https://youtu.be/sYlOJykMEnA?si=ZkPbJZMN3rlqPbZJ
