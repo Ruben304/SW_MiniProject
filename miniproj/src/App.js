@@ -32,12 +32,13 @@ function Room() {
     };
     
     const [collection, setcollection] = useState('placeholder');
-
+    //const [ruser, setruser] = useState(' ');
     const uid = auth.currentUser.uid;
     function selectRuid(user){
-        const ruid = user
+        const ruid = user.id;
         const temp = (uid < ruid) ? uid+ruid : ruid+uid;
         setcollection(temp);
+        //setruser(user)
         console.log(collection);
     }
     
@@ -73,7 +74,8 @@ function Room() {
             const user = childSnapshot.val();
             console.log(user.displayName);
             if (
-              user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+              user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              user.email.toLowerCase().includes(searchQuery.toLowerCase())
             ) {
               results.push({ id: childSnapshot.key, ...user });
             }
@@ -90,6 +92,7 @@ function Room() {
     return(
         <div className='AppContainer'>
             <div className='LogoutContainer'>
+                <p className='Receiver'>Messaging: </p>
                 <button className='Logout' onClick={signOutWithGoogle}>Sign Out</button>
             </div>
             <div className='SearchResults'>
@@ -102,9 +105,8 @@ function Room() {
                     <ul>
                         {searchResults.map((user,index) => (
                             <li key={(user.id)}>
-                                <div onClick={()=>selectRuid(user.id)}>
-                                    <p class="userDisplayName">{user.displayName}</p>
-                                    <p class="userEmail">{user.email}</p>
+                                <div onClick={()=>selectRuid(user)}>
+                                    <p class="userDisplayName">{user.displayName} - {user.email}</p>
                                 </div>
                                 {index < searchResults.length -1 && <hr className="separator" />}
                             </li>
