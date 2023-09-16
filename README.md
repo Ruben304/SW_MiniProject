@@ -8,9 +8,9 @@
 Welcome to Chit Chat* this is a messaging app you can use to talk between friends, acquaintances, or any user signed up
 
 ## Demo:
-Here is the youtube video link to see the demo of our project: https://youtu.be/t92t7-4fDeI
+Here is the youtube video link to see the demo of our project: https://youtu.be/t92t7-4fDeI.
 We have also included some screenshots in the documentation -> screenshots folder of ther different behaviors our application has.
-Other documentation such as testing and results, and Copilot Acknowledgement are left in the documentation folder, while design decisions is in this README.
+Other documentation such as testing and results, and copilot acknowledgement are left in the documentation folder, while design decisions is in this README.
 
 ## Tools: 
 - React for the front end 
